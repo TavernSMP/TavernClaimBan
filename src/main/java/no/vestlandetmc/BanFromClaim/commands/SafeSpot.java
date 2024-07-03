@@ -9,18 +9,14 @@ import org.bukkit.entity.Player;
 
 public class SafeSpot implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (!(sender instanceof Player player)) {
-			MessageHandler.sendConsole("&cYou cannot use this command from the console.");
-			return true;
-		}
-
-		Config.setSafespot(player.getLocation());
-
-		MessageHandler.sendMessage(player, "&eCurrent location has been stored as a safespot.");
-
-		return true;
-	}
-
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player player)) {
+            MessageHandler.sendConsole("&cYou cannot use this command from the console.");
+            return true;
+        }
+        Config.setSafespot(player.getLocation());
+        MessageHandler.sendMessage(player, "&eCurrent location has been stored as a safespot.");
+        return true;
+    }
 }

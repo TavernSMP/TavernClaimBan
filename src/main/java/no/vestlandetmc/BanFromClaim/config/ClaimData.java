@@ -37,32 +37,6 @@ public class ClaimData {
 		}
 	}
 
-	public void changeRegionID(String oldID, String newID) {
-		if (cfg.contains(prefix + "." + oldID)) {
-			if (cfg.getStringList(prefix + "." + oldID).isEmpty()) {
-				cfg.set(prefix + "." + oldID, null);
-			} else {
-				final List<String> uuid = bannedPlayers(oldID);
-				boolean banAll = false;
-
-				if (cfg.contains("claims-ban-all" + "." + oldID + ".ban-all")) {
-					banAll = cfg.getBoolean("claims-ban-all" + "." + oldID + ".ban-all");
-				}
-
-				cfg.createSection(prefix + "." + newID);
-				cfg.set("claims-ban-all" + "." + newID + ".ban-all", banAll);
-
-				if (uuid != null && !uuid.isEmpty()) {
-					cfg.set(prefix + "." + newID, uuid);
-				}
-
-				cfg.set("claims-ban-all" + "." + oldID, null);
-				cfg.set(prefix + "." + oldID, null);
-				saveDatafile();
-			}
-		}
-	}
-
 	private void addData(String claimID, String bannedUUID) {
 		final List<String> uuid = new ArrayList<>();
 

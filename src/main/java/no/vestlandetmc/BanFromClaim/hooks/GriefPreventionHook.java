@@ -7,17 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public class GriefPreventionHook implements RegionHook {
-
-	@Override
-	public boolean isInsideRegion(Player player) {
-		final Location loc = player.getLocation();
-		final Claim claim = GriefPrevention.instance.dataStore.getClaimAt(loc, true, null);
-		return claim != null;
-	}
 
 	@Override
 	public boolean isInsideRegion(Player player, String regionID) {
@@ -68,12 +60,6 @@ public class GriefPreventionHook implements RegionHook {
 	}
 
 	@Override
-	public UUID getOwnerID(String regionID) {
-		final Claim claim = GriefPrevention.instance.dataStore.getClaim(Long.parseLong(regionID));
-		return claim.getOwnerID();
-	}
-
-	@Override
 	public String getClaimOwnerName(String regionID) {
 		final Claim claim = GriefPrevention.instance.dataStore.getClaim(Long.parseLong(regionID));
 		return claim.getOwnerName();
@@ -90,7 +76,6 @@ public class GriefPreventionHook implements RegionHook {
 				}
 			}
 		}
-
 		return false;
 	}
 

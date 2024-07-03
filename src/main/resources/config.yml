@@ -1,5 +1,1 @@
-combatmode:
-  enabled: false
-  time: 15
-  timer-enabled: true
 kickmode: true

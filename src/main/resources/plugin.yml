@@ -1,12 +1,11 @@
-name: BanFromClaim
+name: TavernClaimBan
 version: ${version}
-authors: [ Baktus_79 ]
+authors: [ original author Baktus_79 - fork by Pace ]
 main: no.vestlandetmc.BanFromClaim.BfcPlugin
-description: Addon for GriefPrevention and GriefDefender that let you ban players from entering your claim.
-website: www.vestlandetmc.no
+description: A fork of BanFromClaim with performance benefits
 prefix: BanFromClaim
-api-version: 1.21
-softdepend: [ GriefPrevention, GriefDefender, Residence ]
+api-version: 1.20
+softdepend: [GriefPrevention]
 commands:
   banfromclaim:
     description: Ban a player from your claim

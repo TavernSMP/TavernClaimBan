@@ -18,159 +18,159 @@ import java.util.Set;
 
 public class ConfigHandler extends YamlConfiguration {
 
-	private final File file;
-	private final YamlConfiguration defaults;
-	private String pathPrefix;
+    private final File file;
+    private final YamlConfiguration defaults;
+    private String pathPrefix;
 
-	public ConfigHandler(String fileName) {
-		this(fileName, true);
-	}
+    public ConfigHandler(String fileName) {
+        this(fileName, true);
+    }
 
-	public ConfigHandler(String fileName, boolean useDefaults) {
-		if (useDefaults) {
-			this.defaults = YamlConfiguration.loadConfiguration(new InputStreamReader(ConfigHandler.class.getResourceAsStream("/" + fileName), StandardCharsets.UTF_8));
-		} else {
-			this.defaults = null;
-		}
+    public ConfigHandler(String fileName, boolean useDefaults) {
+        if (useDefaults) {
+            this.defaults = YamlConfiguration.loadConfiguration(new InputStreamReader(ConfigHandler.class.getResourceAsStream("/" + fileName), StandardCharsets.UTF_8));
+        } else {
+            this.defaults = null;
+        }
 
-		this.file = extract(fileName);
-		loadConfig();
-	}
+        this.file = extract(fileName);
+        loadConfig();
+    }
 
-	public void setPathPrefix(String pathPrefix) {
-		this.pathPrefix = pathPrefix;
-	}
+    public void setPathPrefix(String pathPrefix) {
+        this.pathPrefix = pathPrefix;
+    }
 
-	public void reloadConfig() {
-		saveConfig();
+    public void reloadConfig() {
+        saveConfig();
 
-		loadConfig();
-	}
+        loadConfig();
+    }
 
-	public void write(String path, Object value) {
-		set(path, value);
+    public void write(String path, Object value) {
+        set(path, value);
 
-		reloadConfig();
-	}
+        reloadConfig();
+    }
 
-	public void saveConfig() {
-		try {
+    public void saveConfig() {
+        try {
 
-			super.save(file);
+            super.save(file);
 
-		} catch (final IOException ex) {
-			System.out.println("Failed to save configuration from " + file);
+        } catch (final IOException ex) {
+            System.out.println("Failed to save configuration from " + file);
 
-			Bukkit.getLogger().severe(ex.getMessage());
-		}
-	}
+            Bukkit.getLogger().severe(ex.getMessage());
+        }
+    }
 
-	private void loadConfig() {
-		try {
+    private void loadConfig() {
+        try {
 
-			super.load(file);
+            super.load(file);
 
-		} catch (final Throwable t) {
-			System.out.println("Failed to load configuration from " + file);
+        } catch (final Throwable t) {
+            System.out.println("Failed to load configuration from " + file);
 
-			Bukkit.getLogger().severe(t.getMessage());
-		}
-	}
+            Bukkit.getLogger().severe(t.getMessage());
+        }
+    }
 
-	@Override
-	public Object get(String path, Object def) {
-		if (defaults != null) {
+    @Override
+    public Object get(String path, Object def) {
+        if (defaults != null) {
 
-			if (def != null && !def.getClass().isPrimitive() && !PrimitiveWrapper.isWrapperType(def.getClass()))
-				throw new IllegalArgumentException("The default value must be null since we use defaults from file inside of the plugin! Path: " + path + ", default called: " + def);
+            if (def != null && !def.getClass().isPrimitive() && !PrimitiveWrapper.isWrapperType(def.getClass()))
+                throw new IllegalArgumentException("The default value must be null since we use defaults from file inside of the plugin! Path: " + path + ", default called: " + def);
 
-			if (super.get(path, null) == null) {
-				final Object defaultValue = defaults.get(path);
-				write(path, defaultValue);
-			}
-		}
+            if (super.get(path, null) == null) {
+                final Object defaultValue = defaults.get(path);
+                write(path, defaultValue);
+            }
+        }
 
-		final String m = new Throwable().getStackTrace()[1].getMethodName();
+        final String m = new Throwable().getStackTrace()[1].getMethodName();
 
-		if (defaults == null && pathPrefix != null && !m.equals("getConfigurationSection") && !m.equals("get"))
-			path = pathPrefix + "." + path;
+        if (defaults == null && pathPrefix != null && !m.equals("getConfigurationSection") && !m.equals("get"))
+            path = pathPrefix + "." + path;
 
-		return super.get(path, null);
-	}
+        return super.get(path, null);
+    }
 
-	@Override
-	public void set(String path, Object value) {
-		final String m = new Throwable().getStackTrace()[1].getMethodName();
+    @Override
+    public void set(String path, Object value) {
+        final String m = new Throwable().getStackTrace()[1].getMethodName();
 
-		if (defaults == null && pathPrefix != null && !m.equals("getConfigurationSection") && !m.equals("get"))
-			path = pathPrefix + "." + path;
+        if (defaults == null && pathPrefix != null && !m.equals("getConfigurationSection") && !m.equals("get"))
+            path = pathPrefix + "." + path;
 
-		super.set(path, value);
-	}
+        super.set(path, value);
+    }
 
-	private File extract(String path) {
-		final JavaPlugin i = BfcPlugin.getPlugin();
-		final File file = new File(i.getDataFolder(), path);
+    private File extract(String path) {
+        final JavaPlugin i = BfcPlugin.getPlugin();
+        final File file = new File(i.getDataFolder(), path);
 
-		if (file.exists())
-			return file;
+        if (file.exists())
+            return file;
 
-		createFileAndDirectory(path);
+        createFileAndDirectory(path);
 
-		if (defaults != null)
-			try (InputStream is = i.getResource(path)) {
-				Files.copy(is, Paths.get(file.toURI()), StandardCopyOption.REPLACE_EXISTING);
+        if (defaults != null)
+            try (InputStream is = i.getResource(path)) {
+                Files.copy(is, Paths.get(file.toURI()), StandardCopyOption.REPLACE_EXISTING);
 
-			} catch (final IOException e) {
-				Bukkit.getLogger().severe(e.getMessage());
-			}
+            } catch (final IOException e) {
+                Bukkit.getLogger().severe(e.getMessage());
+            }
 
-		return file;
-	}
+        return file;
+    }
 
-	private File createFileAndDirectory(String path) {
+    private File createFileAndDirectory(String path) {
 
-		final File datafolder = BfcPlugin.getPlugin().getDataFolder();
-		final int lastIndex = path.lastIndexOf('/');
-		final File directory = new File(datafolder, path.substring(0, Math.max(lastIndex, 0)));
+        final File datafolder = BfcPlugin.getPlugin().getDataFolder();
+        final int lastIndex = path.lastIndexOf('/');
+        final File directory = new File(datafolder, path.substring(0, Math.max(lastIndex, 0)));
 
-		directory.mkdirs();
+        directory.mkdirs();
 
-		final File destination = new File(datafolder, path);
+        final File destination = new File(datafolder, path);
 
-		try {
-			destination.createNewFile();
+        try {
+            destination.createNewFile();
 
-		} catch (final IOException ex) {
-			System.out.println("Failed to create file " + path);
+        } catch (final IOException ex) {
+            System.out.println("Failed to create file " + path);
 
-			Bukkit.getLogger().severe(ex.getMessage());
-		}
+            Bukkit.getLogger().severe(ex.getMessage());
+        }
 
-		return destination;
-	}
+        return destination;
+    }
 
-	private static final class PrimitiveWrapper {
-		private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
+    private static final class PrimitiveWrapper {
+        private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
 
-		private static boolean isWrapperType(Class<?> clazz) {
-			return WRAPPER_TYPES.contains(clazz);
-		}
+        private static boolean isWrapperType(Class<?> clazz) {
+            return WRAPPER_TYPES.contains(clazz);
+        }
 
-		private static Set<Class<?>> getWrapperTypes() {
-			final Set<Class<?>> ret = new HashSet<>();
-			ret.add(Boolean.class);
-			ret.add(Character.class);
-			ret.add(Byte.class);
-			ret.add(Short.class);
-			ret.add(Integer.class);
-			ret.add(Long.class);
-			ret.add(Float.class);
-			ret.add(Double.class);
-			ret.add(Void.class);
-			return ret;
-		}
-	}
+        private static Set<Class<?>> getWrapperTypes() {
+            final Set<Class<?>> ret = new HashSet<>();
+            ret.add(Boolean.class);
+            ret.add(Character.class);
+            ret.add(Byte.class);
+            ret.add(Short.class);
+            ret.add(Integer.class);
+            ret.add(Long.class);
+            ret.add(Float.class);
+            ret.add(Double.class);
+            ret.add(Void.class);
+            return ret;
+        }
+    }
 
 }
 

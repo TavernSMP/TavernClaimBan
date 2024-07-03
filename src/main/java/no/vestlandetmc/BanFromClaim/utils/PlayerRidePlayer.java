@@ -22,7 +22,6 @@ public class PlayerRidePlayer {
 				return target;
 			}
 		}
-
 		return null;
 	}
 }
