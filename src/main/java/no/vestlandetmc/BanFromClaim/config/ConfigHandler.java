@@ -1,5 +1,6 @@
 package no.vestlandetmc.BanFromClaim.config;
 
+import lombok.Setter;
 import no.vestlandetmc.BanFromClaim.BfcPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -20,6 +21,7 @@ public class ConfigHandler extends YamlConfiguration {
 
     private final File file;
     private final YamlConfiguration defaults;
+    @Setter
     private String pathPrefix;
 
     public ConfigHandler(String fileName) {
@@ -35,10 +37,6 @@ public class ConfigHandler extends YamlConfiguration {
 
         this.file = extract(fileName);
         loadConfig();
-    }
-
-    public void setPathPrefix(String pathPrefix) {
-        this.pathPrefix = pathPrefix;
     }
 
     public void reloadConfig() {

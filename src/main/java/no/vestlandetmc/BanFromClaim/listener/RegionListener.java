@@ -8,7 +8,6 @@ import no.vestlandetmc.BanFromClaim.handler.MessageHandler;
 import no.vestlandetmc.BanFromClaim.handler.ParticleHandler;
 import no.vestlandetmc.BanFromClaim.hooks.RegionHook;
 import no.vestlandetmc.BanFromClaim.utils.LocationFinder;
-import no.vestlandetmc.BanFromClaim.utils.PlayerRidePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,7 +19,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class RegionListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerEnterClaim(PlayerMoveEvent e) {
         final ClaimData claimData = new ClaimData();
         final Location locFrom = e.getFrom();
@@ -36,12 +35,7 @@ public class RegionListener implements Listener {
         final ParticleHandler ph = new ParticleHandler(e.getTo());
 
         if (regionID != null) {
-            final Player target = PlayerRidePlayer.getPassenger(player);
             boolean hasAttacked = false;
-
-            if (target != null && (claimData.isAllBanned(regionID) || playerBanned(target, regionID) || playerBanned(player, regionID))) {
-                target.teleport(player.getLocation().add(0, 4, 0));
-            }
 
             if ((claimData.isAllBanned(regionID) || playerBanned(player, regionID)) && !hasAttacked && !region.hasTrust(player, regionID)) {
                 final String regionIdFrom = region.getRegionID(locFrom);
