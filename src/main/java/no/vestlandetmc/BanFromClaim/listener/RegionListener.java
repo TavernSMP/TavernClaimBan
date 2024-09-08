@@ -34,6 +34,9 @@ public class RegionListener implements Listener {
         final String regionID = region.getRegionID(locTo);
         final ParticleHandler ph = new ParticleHandler(e.getTo());
 
+        if (player.hasPermission("tavernclaimban.bypass"))
+            return;
+
         if (regionID != null) {
             boolean hasAttacked = false;
 

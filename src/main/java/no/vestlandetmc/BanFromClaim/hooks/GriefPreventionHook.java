@@ -65,19 +65,25 @@ public class GriefPreventionHook implements RegionHook {
 		return claim.getOwnerName();
 	}
 
-	@Override
-	public boolean hasTrust(OfflinePlayer player, String regionID) {
-		final Claim claim = GriefPrevention.instance.dataStore.getClaim(Long.parseLong(regionID));
+    @Override
+    public boolean hasTrust(OfflinePlayer player, String regionID) {
+        final Claim claim = GriefPrevention.instance.dataStore.getClaim(Long.parseLong(regionID));
 
-		for (ClaimPermission claimPermission : ClaimPermission.values()) {
-			if (claimPermission != ClaimPermission.Edit) {
-				if (claim.checkPermission(player.getUniqueId(), claimPermission, null).get() == null) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+        if (claim == null) {
+            // Claim not found
+            return false;
+        }
+
+        for (ClaimPermission claimPermission : ClaimPermission.values()) {
+            if (claimPermission != ClaimPermission.Edit) {
+                Supplier<String> permissionCheck = claim.checkPermission(player.getUniqueId(), claimPermission, null);
+                if (permissionCheck != null && permissionCheck.get() == null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 	@Override
 	public boolean regionExist(String regionID) {
